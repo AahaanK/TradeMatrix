@@ -1,0 +1,224 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * TradeMatrix design tokens.
+ * Every colour below is either one of the five brand colours or a tint / shade of one:
+ *   Scooter #2F9D94, Alabaster #F7F6F2, Heather #BCC5CC, Blue Lagoon #025F67, Sapphire #063154.
+ * Losses use a muted brick red and warnings a muted amber, because profit/loss needs two
+ * distinguishable colours and red/green-alike pairs are not safe for colour-blind users.
+ */
+:root {
+  --tm-bg: 247 246 242;          /* Alabaster */
+  --tm-surface: 255 255 255;
+  --tm-subtle: 241 240 235;      /* Alabaster, one step darker */
+  --tm-line: 222 226 229;        /* Heather, lightened */
+  --tm-line-strong: 188 197 204; /* Heather */
+  --tm-ink: 10 35 58;            /* Sapphire, deepened for body text */
+  --tm-ink-2: 72 91 108;
+  --tm-ink-3: 104 119 132;
+  --tm-brand: 2 95 103;          /* Blue Lagoon */
+  --tm-brand-hover: 1 78 85;
+  --tm-brand-fg: 255 255 255;
+  --tm-accent: 47 157 148;       /* Scooter */
+  --tm-pos: 22 117 108;          /* Scooter, darkened for readable text */
+  --tm-neg: 168 76 76;
+  --tm-warn: 146 98 10;
+  --tm-nav: 6 49 84;             /* Sapphire */
+  color-scheme: light;
+}
+
+.dark {
+  --tm-bg: 5 24 41;
+  --tm-surface: 9 33 54;
+  --tm-subtle: 13 43 67;
+  --tm-line: 27 55 79;
+  --tm-line-strong: 46 78 104;
+  --tm-ink: 231 236 239;
+  --tm-ink-2: 168 184 196;
+  --tm-ink-3: 132 151 166;
+  --tm-brand: 47 157 148;        /* Scooter reads better than Blue Lagoon on dark */
+  --tm-brand-hover: 64 175 165;
+  --tm-brand-fg: 3 22 36;
+  --tm-accent: 47 157 148;
+  --tm-pos: 86 192 181;
+  --tm-neg: 224 132 128;
+  --tm-warn: 224 177 92;
+  --tm-nav: 3 19 33;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans text-base antialiased;
+    font-feature-settings: "kern" 1;
+  }
+  /* Tabular numerals everywhere numbers line up in columns */
+  .num,
+  td,
+  th,
+  input[type="number"] {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: rgb(47 157 148 / 0.28);
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--tm-accent));
+    outline-offset: 2px;
+  }
+  a {
+    @apply text-brand;
+  }
+  h1, h2, h3 {
+    @apply text-ink;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  /* Data tables */
+  .tm-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .tm-table thead th {
+    @apply bg-subtle text-ink-2 text-xs font-medium text-left px-3 py-2 border-b border-line whitespace-nowrap;
+  }
+  .tm-table tbody td {
+    @apply px-3 py-2 border-b border-line text-ink whitespace-nowrap;
+  }
+  .tm-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .tm-table tbody tr:hover td {
+    @apply bg-subtle/60;
+  }
+  .tm-table .r {
+    @apply text-right;
+  }
+  .tm-table-sticky thead th {
+    @apply sticky top-0 z-[1];
+  }
+
+  /* Form controls */
+  .tm-input {
+    @apply h-9 w-full rounded border border-line-strong/80 bg-surface px-3 text-sm text-ink placeholder:text-ink-3
+      transition-colors hover:border-ink-3 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25;
+  }
+  .tm-input:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+  .tm-label {
+    @apply block text-sm font-medium text-ink mb-1.5;
+  }
+  .tm-hint {
+    @apply text-xs text-ink-3 mt-1.5;
+  }
+
+  /* Range slider */
+  .tm-range {
+    @apply w-full appearance-none bg-transparent cursor-pointer h-5;
+  }
+  .tm-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      rgb(var(--tm-brand)) 0%,
+      rgb(var(--tm-brand)) var(--fill, 50%),
+      rgb(var(--tm-line-strong) / 0.7) var(--fill, 50%),
+      rgb(var(--tm-line-strong) / 0.7) 100%
+    );
+  }
+  .tm-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: rgb(var(--tm-line-strong) / 0.7);
+  }
+  .tm-range::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: rgb(var(--tm-brand));
+  }
+  .tm-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: rgb(var(--tm-surface));
+    border: 1.5px solid rgb(var(--tm-brand));
+    box-shadow: 0 1px 2px rgb(6 49 84 / 0.2);
+    transition: transform 120ms ease;
+  }
+  .tm-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgb(var(--tm-surface));
+    border: 1.5px solid rgb(var(--tm-brand));
+  }
+  .tm-range:active::-webkit-slider-thumb {
+    transform: scale(1.12);
+  }
+  .tm-range:focus-visible {
+    outline: none;
+  }
+  .tm-range:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgb(var(--tm-accent) / 0.3);
+  }
+}
+
+/* Thin, quiet scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--tm-line-strong) / 0.8) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--tm-line-strong) / 0.7);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes tm-pop {
+  from { opacity: 0; transform: translateY(-2px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tm-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes tm-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+.tm-skeleton {
+  background: linear-gradient(90deg, rgb(var(--tm-subtle)) 0px, rgb(var(--tm-line) / 0.7) 80px, rgb(var(--tm-subtle)) 160px);
+  background-size: 200px 100%;
+  animation: tm-shimmer 1.4s ease-in-out infinite;
+}
